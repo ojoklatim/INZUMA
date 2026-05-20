@@ -203,9 +203,17 @@ export default function UserDashboard() {
       alert('Speech Recognition is not supported by your browser.');
       return;
     }
-    if (isListening) return;
+    
+    if (isListening) {
+      if (window.activeRecognition) {
+        window.activeRecognition.stop();
+      }
+      setIsListening(false);
+      return;
+    }
 
     const recognition = new SpeechRecognition();
+    window.activeRecognition = recognition;
     recognition.continuous = false;
     recognition.lang = 'en-US';
     recognition.interimResults = false;
@@ -219,21 +227,28 @@ export default function UserDashboard() {
         setEmptyStateInput(prev => prev + (prev ? ' ' : '') + text);
       }
     };
-    recognition.onerror = () => setIsListening(false);
-    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => {
+      setIsListening(false);
+      window.activeRecognition = null;
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+      window.activeRecognition = null;
+    };
     recognition.start();
   };
 
-  // Starter prompt handler: create session + inject first message
+  // Starter prompt handler: create session + inject first message directly into state & database
   const handleStarterPrompt = async (promptText) => {
     try {
+      const firstMsg = { role: 'user', content: promptText };
       const newSession = {
         user_id: user.id,
         title: promptText.slice(0, 40),
         mood_score: 0,
         mood_label: 'calm',
         duration_seconds: 0,
-        messages: JSON.stringify([]),
+        messages: JSON.stringify([firstMsg]),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         summary: null
@@ -254,11 +269,20 @@ export default function UserDashboard() {
       setSessions(prev => [created, ...prev]);
       setActiveSessionId(created.id);
 
-      // We'll let ChatView handle the actual message sending
-      // by dispatching the prompt text after a tick
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('inzuma-starter-prompt', { detail: promptText }));
-      }, 100);
+      // Save user message to messages table
+      if (created.id) {
+        try {
+          await insforge.database
+            .from('messages')
+            .insert([{
+              session_id: created.id,
+              role: 'user',
+              content: promptText
+            }]);
+        } catch (err) {
+          console.error('Failed to save starter prompt to messages table:', err);
+        }
+      }
     } catch (err) {
       console.error('Starter prompt error:', err);
     }
@@ -323,7 +347,8 @@ export default function UserDashboard() {
               onUpdateSession={handleUpdateSession}
               ttsEnabled={ttsEnabled}
               isListening={isListening}
-              onToggleVoice={() => setVoiceActive(true)}
+              onToggleVoice={handleToggleVoice}
+              onEnterVoiceMode={() => setVoiceActive(true)}
               onToggleSidebar={() => setSidebarOpen(prev => !prev)}
               onEndSession={() => setAnalyzingSession(activeSession)}
               userName={userName}

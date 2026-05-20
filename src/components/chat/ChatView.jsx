@@ -26,7 +26,9 @@ export default function ChatView({
   isListening,
   onToggleVoice,
   onToggleSidebar,
-  onEndSession
+  onEndSession,
+  userName,
+  onEnterVoiceMode
 }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
@@ -53,6 +55,11 @@ export default function ChatView({
       setTitleValue(session.title || 'New session');
       setElapsed(session.duration_seconds || 0);
       assistantMsgCount.current = parsed.filter(m => m.role === 'assistant').length;
+
+      // Auto-trigger first AI response if there is exactly 1 user message and no assistant messages yet!
+      if (parsed.length === 1 && parsed[0].role === 'user' && !isStreaming) {
+        triggerFirstResponse(parsed);
+      }
     }
   }, [session?.id]);
 
@@ -188,7 +195,11 @@ export default function ChatView({
 
     const userMsg = { role: 'user', content: text.trim() };
     const nextMessages = [...messages, userMsg];
-    setMessages(nextMessages);
+    
+    // Set both the user message and the blank assistant placeholder message in a single batch
+    // to prevent race conditions during streaming responses!
+    const assistantIdx = nextMessages.length;
+    setMessages([...nextMessages, { role: 'assistant', content: '' }]);
     setInputText('');
     setIsStreaming(true);
 
@@ -216,9 +227,6 @@ export default function ChatView({
       titleUpdate = { title: autoTitle };
     }
 
-    const assistantIdx = nextMessages.length;
-    setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
-
     let streamedText = '';
     await streamCompletion({
       messages: nextMessages.filter(m => m.role !== 'system'),
@@ -226,7 +234,9 @@ export default function ChatView({
         streamedText += chunk;
         setMessages(prev => {
           const updated = [...prev];
-          updated[assistantIdx] = { role: 'assistant', content: streamedText };
+          if (updated[assistantIdx]) {
+            updated[assistantIdx] = { role: 'assistant', content: streamedText };
+          }
           return updated;
         });
       },
@@ -263,6 +273,62 @@ export default function ChatView({
         const errorMsg = [...nextMessages, { role: 'assistant', content: `I'm having trouble connecting right now. Please try again in a moment.` }];
         setMessages(errorMsg);
         persistSession(errorMsg, titleUpdate);
+      }
+    });
+  };
+
+  // Auto-triggers AI response on new sessions created via reflection starter prompts
+  const triggerFirstResponse = async (initialMessages) => {
+    if (isStreaming) return;
+    setIsStreaming(true);
+    const assistantIdx = initialMessages.length;
+    
+    // Render user message and assistant placeholder message in a single batch
+    setMessages([...initialMessages, { role: 'assistant', content: '' }]);
+
+    let streamedText = '';
+    await streamCompletion({
+      messages: initialMessages.filter(m => m.role !== 'system'),
+      onChunk: (chunk) => {
+        streamedText += chunk;
+        setMessages(prev => {
+          const updated = [...prev];
+          if (updated[assistantIdx]) {
+            updated[assistantIdx] = { role: 'assistant', content: streamedText };
+          }
+          return updated;
+        });
+      },
+      onDone: async (fullText) => {
+        setIsStreaming(false);
+        const finalMessages = [...initialMessages, { role: 'assistant', content: fullText }];
+        setMessages(finalMessages);
+        persistSession(finalMessages);
+        speakText(fullText);
+
+        // Persist AI response to messages table
+        try {
+          await insforge.database
+            .from('messages')
+            .insert([{
+              session_id: session.id,
+              role: 'assistant',
+              content: fullText,
+              mood_score: session?.mood_score || 0
+            }]);
+        } catch (err) {
+          console.error('Failed to save AI response to messages table:', err);
+        }
+
+        assistantMsgCount.current += 1;
+        maybeShowSuggestions(assistantMsgCount.current);
+        detectMood(finalMessages);
+      },
+      onError: (err) => {
+        setIsStreaming(false);
+        const errorMsg = [...initialMessages, { role: 'assistant', content: `I'm having trouble connecting right now. Please try again in a moment.` }];
+        setMessages(errorMsg);
+        persistSession(errorMsg);
       }
     });
   };
@@ -355,6 +421,17 @@ export default function ChatView({
               <path d="M19 10v2a7 7 0 01-14 0v-2"/>
               <line x1="12" y1="19" x2="12" y2="23"/>
               <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </button>
+          <button
+            className="topbar-voice-btn headset-btn"
+            onClick={onEnterVoiceMode}
+            title="Start immersive interactive voice session"
+            style={{ marginLeft: '6px' }}
+          >
+            <svg viewBox="0 0 24 24" style={{ fill: 'none', stroke: 'currentColor', strokeWidth: 2 }}>
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
             </svg>
           </button>
         </div>
