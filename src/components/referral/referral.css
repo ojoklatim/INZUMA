@@ -1,0 +1,437 @@
+/* =============================================
+   Inzuma Referral & Post-Session Analysis CSS
+   ============================================= */
+
+.referral-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.referral-modal {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  animation: modal-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.referral-body {
+  padding: 32px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.referral-footer {
+  padding: 20px 32px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Header & Text */
+.referral-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.referral-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Screen 1: Reflection */
+.reflection-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.reflection-stat-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+}
+
+.reflection-stat-val {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.reflection-stat-lbl {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Mood Progression Journey */
+.mood-journey-box {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.mood-journey-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.mood-dots-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.mood-dot-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 44px;
+}
+
+.mood-dot-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+.mood-dot-circle.green { background-color: #52C41A; box-shadow: 0 0 8px rgba(82, 196, 26, 0.3); }
+.mood-dot-circle.amber { background-color: #F5A623; box-shadow: 0 0 8px rgba(245, 166, 35, 0.3); }
+.mood-dot-circle.red { background-color: #F5222D; box-shadow: 0 0 8px rgba(245, 34, 45, 0.3); }
+.mood-dot-circle.blue { background-color: var(--calm); box-shadow: 0 0 8px rgba(0, 122, 255, 0.2); }
+
+.mood-dot-lbl {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Themes bullet points */
+.themes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.theme-bullet {
+  background-color: var(--bg-secondary);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  transition: all var(--transition-normal);
+}
+
+.theme-bullet:hover {
+  transform: translateX(4px);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Screen 2: Pattern Recognition */
+.pattern-card {
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.pattern-card-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.pattern-desc {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.disclaimer-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  display: block;
+}
+
+/* Screen 3: Professional Referrals */
+.referrals-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+/* Colored left-border bands */
+.referral-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.referral-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+/* Colors for bands */
+.referral-card.blue { border-left: 4px solid var(--calm); }
+.referral-card.amber { border-left: 4px solid var(--accent); }
+.referral-card.purple { border-left: 4px solid #9B5DE5; }
+.referral-card.green { border-left: 4px solid #00F5D4; }
+.referral-card.orange { border-left: 4px solid #F15BB5; }
+.referral-card.rose { border-left: 4px solid #FF006E; }
+.referral-card.red { border-left: 4px solid #FF5A5F; }
+
+.referral-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.referral-card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--text-primary);
+}
+
+.referral-tag {
+  font-size: 0.7rem;
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+
+.referral-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.referral-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Specialist Action Buttons */
+.referral-btn {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-normal);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.referral-btn:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: var(--text-muted);
+}
+
+.referral-btn.crisis {
+  background-color: rgba(255, 90, 95, 0.1);
+  border-color: #FF5A5F;
+  color: #FF5A5F;
+}
+
+.referral-btn.crisis:hover {
+  background-color: #FF5A5F;
+  color: #FFF;
+}
+
+.referral-save-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  margin-left: auto;
+}
+
+.referral-save-btn:hover, .referral-save-btn.saved {
+  color: var(--accent);
+}
+
+/* Crisis Card (Urgent Attention red border) */
+.crisis-referral-card {
+  border: 2px solid #FF5A5F !important;
+  background-color: rgba(255, 90, 95, 0.03);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.crisis-card-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: #FF5A5F;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crisis-info-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.crisis-info-block {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.crisis-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Inzuma Platform Professional Cards */
+.platform-pros-header {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin: 32px 0 16px;
+}
+
+.pro-minicard {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pro-minicard-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pro-name-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.pro-name-title span {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+
+.pro-loc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.pro-badge {
+  font-size: 0.7rem;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pro-minicard-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Nav steps indicators */
+.referral-step-indicator {
+  display: flex;
+  gap: 8px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--border);
+  transition: background-color 0.3s ease;
+}
+
+.step-dot.active {
+  background-color: var(--accent);
+}
+
+/* Animations */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

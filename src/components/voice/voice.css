@@ -1,0 +1,344 @@
+/* =============================================
+   Inzuma Voice Mode Screen Styling
+   ============================================= */
+
+.voice-mode-takeover {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-primary);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 24px 60px;
+  overflow: hidden;
+  transition: background-color var(--transition-normal);
+}
+
+/* Background shifting wash (5% opacity) */
+.voice-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.05;
+  transition: background-color 1s ease, filter 1s ease;
+}
+
+.voice-wash.idle { background-color: var(--accent); }
+.voice-wash.listening { background-color: var(--accent); filter: saturate(1.5); }
+.voice-wash.thinking { background-color: var(--text-muted); }
+.voice-wash.speaking { background-color: var(--calm); }
+
+/* Top Header */
+.voice-header {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+}
+
+.voice-header-title {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.voice-status-badge {
+  font-size: 0.75rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Middle Section: Spoken Text & Orb */
+.voice-center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  z-index: 5;
+  gap: 32px;
+}
+
+/* User Spoken Text (briefly above orb) */
+.voice-user-text-preview {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-muted);
+  text-align: center;
+  min-height: 28px;
+  max-width: 480px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.voice-user-text-preview.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ORB */
+.voice-orb-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-orb {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+}
+
+/* Orb state morphs */
+.voice-orb.idle {
+  animation: orb-idle 4s ease-in-out infinite;
+}
+
+.voice-orb.listening {
+  animation: orb-listening 1s ease-in-out infinite alternate;
+  border-color: var(--accent);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
+  transform: scale(1.1);
+}
+
+.voice-orb.thinking {
+  animation: orb-thinking 2s linear infinite;
+  border-color: var(--text-muted);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.04);
+}
+
+.voice-orb.speaking {
+  animation: orb-speaking 2s ease-in-out infinite alternate;
+  border-color: var(--calm);
+  box-shadow: 0 0 50px rgba(0, 122, 255, 0.15);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+}
+
+/* Radiating ripple rings (Only in Listening State) */
+.voice-ripple {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transform: scale(1);
+}
+
+.voice-orb-wrapper.listening .voice-ripple-1 {
+  animation: ripple-out 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+.voice-orb-wrapper.listening .voice-ripple-2 {
+  animation: ripple-out 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  animation-delay: 0.6s;
+}
+
+.voice-orb-wrapper.listening .voice-ripple-3 {
+  animation: ripple-out 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  animation-delay: 1.2s;
+}
+
+/* AI Spoken transcript (Max 3 lines visible) */
+.voice-transcript-container {
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.voice-transcript-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  transition: transform 0.4s ease;
+  max-width: 480px;
+}
+
+.voice-transcript-line {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  opacity: 1;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  text-align: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.voice-transcript-line.old {
+  opacity: 0.2;
+  transform: translateY(-10px) scale(0.95);
+}
+
+/* Lower Controls Area */
+.voice-controls {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.voice-controls.fade-out {
+  opacity: 0.15;
+  pointer-events: none;
+  transform: scale(0.96);
+}
+
+/* Action button style */
+.voice-action-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.voice-action-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+/* Large Center Mic Button */
+.voice-mic-main {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background-color: var(--bg-card);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.voice-mic-main:hover {
+  transform: scale(1.05);
+  border-color: var(--accent);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+}
+
+.voice-mic-main.active {
+  background-color: var(--accent);
+  color: #FFFFFF;
+  border-color: var(--accent);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+}
+
+.voice-mic-main.active:hover {
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.2);
+}
+
+.voice-mic-main svg {
+  width: 32px;
+  height: 32px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+.voice-action-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Keyframe Animations */
+
+/* Idle floating */
+@keyframes orb-idle {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    transform: scale(0.96) translateY(-4px);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* Listening scale breathing */
+@keyframes orb-listening {
+  to {
+    transform: scale(1.15);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Thinking rotate */
+@keyframes orb-thinking {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fluid morph speaking */
+@keyframes orb-speaking {
+  0% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    transform: scale(1);
+  }
+  100% {
+    border-radius: 70% 30% 50% 50% / 50% 60% 40% 60%;
+    transform: scale(1.08);
+  }
+}
+
+/* Ring ripple out */
+@keyframes ripple-out {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
