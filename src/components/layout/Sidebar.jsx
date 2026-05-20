@@ -81,10 +81,9 @@ export default function Sidebar({
     .slice(0, 2);
 
   return (
-    <>
+    <aside className="sidebar">
       <div className="sidebar-overlay" onClick={onToggleSidebar} />
-      <aside className="sidebar">
-        {/* Header */}
+      {/* Header */}
         <div className="sidebar-header" style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'stretch' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -216,6 +215,5 @@ export default function Sidebar({
           </button>
         </div>
       </aside>
-    </>
   );
 }

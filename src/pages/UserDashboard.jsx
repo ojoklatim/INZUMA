@@ -304,7 +304,7 @@ export default function UserDashboard() {
   }
 
   return (
-    <div className={`shell ${sidebarOpen ? 'sidebar-open' : ''}`}>
+    <div className={`shell ${sidebarOpen ? 'sidebar-open' : 'sidebar-collapsed'}`}>
       {voiceActive && activeSession && (
         <VoiceMode
           session={activeSession}
