@@ -27,6 +27,13 @@
   transition: transform var(--transition-normal), opacity var(--transition-normal);
 }
 
+.sidebar-header,
+.sidebar-sessions,
+.sidebar-footer {
+  position: relative;
+  z-index: 10;
+}
+
 .shell.sidebar-collapsed .sidebar {
   transform: translateX(-260px);
   opacity: 0;
@@ -978,7 +985,8 @@
 
 /* ---- MOBILE ---- */
 @media (max-width: 768px) {
-  .shell {
+  .shell,
+  .shell.sidebar-collapsed {
     grid-template-columns: 1fr;
   }
 
