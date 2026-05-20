@@ -243,7 +243,7 @@ export default function AnalysisModal({
                   {analysis?.pattern_description || "Throughout today's conversations, certain emotional themes recurred. Noticing these patterns is the first step toward building mindfulness."}
                 </p>
                 <span className="disclaimer-text">
-                  ⚠️ This reflection is compiled by a companion AI for clarity. It is not a clinical diagnosis or medical evaluation.
+                  This reflection is compiled by a companion AI for clarity. It is not a clinical diagnosis or medical evaluation.
                 </span>
               </div>
             </div>
@@ -295,7 +295,7 @@ export default function AnalysisModal({
                       className="referral-btn crisis"
                       onClick={() => logReferral(matchedSpecialist.title, 'crisis_called')}
                     >
-                      📞 Crisis Line
+                      Crisis Line
                     </a>
                     <a
                       href={getDirectoryLink()}
@@ -304,7 +304,7 @@ export default function AnalysisModal({
                       className="referral-btn"
                       onClick={() => logReferral(matchedSpecialist.title, 'near_you_searched')}
                     >
-                      🔍 Find One Near You
+                      Find One Near You
                     </a>
                     <button
                       className={`referral-save-btn ${savedSpecialists.includes(matchedSpecialist.title) ? 'saved' : ''}`}
@@ -330,7 +330,7 @@ export default function AnalysisModal({
                           {pro.name || 'Practitioner'} <span>• {pro.specialty}</span>
                         </div>
                         <div className="pro-loc">{pro.clinic_address || 'Kampala, Uganda'}</div>
-                        <div className="pro-badge">⭐ Available on Inzuma</div>
+                        <div className="pro-badge">Available on Inzuma</div>
                       </div>
                       <div className="pro-minicard-actions">
                         <button

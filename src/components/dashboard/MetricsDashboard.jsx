@@ -481,7 +481,7 @@ export default function MetricsDashboard({
                       className="referral-btn"
                       style={{ padding: '6px 12px', fontSize: '0.75rem' }}
                     >
-                      🔍 Search Directories
+                      Search Directories
                     </a>
                     <button
                       className="referral-btn"

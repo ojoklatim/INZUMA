@@ -303,43 +303,43 @@ export default function AdminDashboard() {
             className={`admin-sidebar-nav-btn ${activeTab === 'overview' ? 'active' : ''}`}
             onClick={() => setActiveTab('overview')}
           >
-            📊 Overview
+            Overview
           </button>
           <button
             className={`admin-sidebar-nav-btn ${activeTab === 'users' ? 'active' : ''}`}
             onClick={() => setActiveTab('users')}
           >
-            👥 Users
+            Users
           </button>
           <button
             className={`admin-sidebar-nav-btn ${activeTab === 'professionals' ? 'active' : ''}`}
             onClick={() => setActiveTab('professionals')}
           >
-            🩺 Professionals
+            Professionals
           </button>
           <button
             className={`admin-sidebar-nav-btn ${activeTab === 'sessions' ? 'active' : ''}`}
             onClick={() => setActiveTab('sessions')}
           >
-            🛡️ Anonymized Sessions
+            Anonymized Sessions
           </button>
           <button
             className={`admin-sidebar-nav-btn ${activeTab === 'referrals' ? 'active' : ''}`}
             onClick={() => setActiveTab('referrals')}
           >
-            🔗 Referrals Log
+            Referrals Log
           </button>
           <button
             className={`admin-sidebar-nav-btn ${activeTab === 'invites' ? 'active' : ''}`}
             onClick={() => setActiveTab('invites')}
           >
-            ✉️ Invite Management
+            Invite Management
           </button>
           <button
             className={`admin-sidebar-nav-btn ${activeTab === 'health' ? 'active' : ''}`}
             onClick={() => setActiveTab('health')}
           >
-            ⚡ Platform Health
+            Platform Health
           </button>
         </div>
 
@@ -428,7 +428,7 @@ export default function AdminDashboard() {
                         {crisisAlerts.map((cr, idx) => (
                           <div key={idx} className="admin-log-item" style={{ borderColor: 'rgba(255,90,95,0.4)', backgroundColor: 'rgba(255,90,95,0.02)' }}>
                             <div className="flex justify-between items-center text-xs">
-                              <span style={{ color: '#FF5A5F', fontWeight: 'bold' }}>⚠️ CRISIS MITIGATION TRACE</span>
+                              <span style={{ color: '#FF5A5F', fontWeight: 'bold' }}>CRISIS MITIGATION TRACE</span>
                               <span style={{ color: 'var(--text-muted)' }}>{new Date(cr.created_at).toLocaleDateString()}</span>
                             </div>
                             <p style={{ fontSize: '0.75rem', marginTop: '4px', color: 'var(--text-secondary)' }}>
@@ -617,7 +617,7 @@ export default function AdminDashboard() {
                   onClick={handleExportCSV}
                   style={{ marginLeft: 'auto', padding: '8px 16px', fontSize: '0.8rem' }}
                 >
-                  📥 Export Logs to CSV
+                  Export Logs to CSV
                 </button>
               </div>
 
